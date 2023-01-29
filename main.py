@@ -2,6 +2,8 @@ import os
 import re
 import json
 import pyspark
+import shutil
+import glob
 from pyspark.sql.functions import explode
 from json.decoder import JSONDecodeError
 
@@ -110,30 +112,31 @@ def dump_summary():
         df.write.csv(f"data/summary_df_{year}_{quarter}.csv")
 
 
-def read_summary():
+def read_summary(remove_aux_dirs=False):
     dir_list = get_dirs()
     spark = ini_spark()
     df = None
     for quarter_folder in dir_list:
         year, quarter = get_year_qtr_of_dir(quarter_folder)
-        print(f"data/summary_df_{year}_{quarter}.csv")
-
         if df is None:
             df = spark.read.csv(f"data/summary_df_{year}_{quarter}.csv")
             # print(df.show())
         else:
             tmp_df = spark.read.csv(f"data/summary_df_{year}_{quarter}.csv")
             df = df.union(tmp_df)
+    df.write.csv(f"data/summary.csv")
+    if remove_aux_dirs == True:
+        [shutil.rmtree(path) for path in glob.glob("data/summary_df_*")]
     return df
 
 
 if __name__ == "__main__":
-    dump_sum = False
+    dump_sum = True
     if dump_sum == True:
         dump_summary()
     else:
         pass
-    df = read_summary()
+    df = read_summary(remove_aux_dirs=True)
     print(df.show())
 
     # parquet_files = get_dirs(directory='data')
