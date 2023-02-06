@@ -14,5 +14,5 @@ Input data has been extracted from an available dataset from finnhub available a
     .
     ├── archive                 
     ├── src                    
-    ├── test                    
+    ├── tests                  
     └── README.md
