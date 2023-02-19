@@ -58,7 +58,7 @@ class FolderReader:
                         "ticker": ticker,
                         "year": year,
                         "quarter": quarter,
-                        "location": json_file
+                        "location": json_file,
                     }
                 )
             df = spark.createDataFrame(collect_df)
@@ -71,13 +71,13 @@ class FolderReader:
             for quarter_folder in dir_list:
                 year, quarter = self.get_year_qtr_of_dir(quarter_folder)
                 if df is None:
-                    df = spark.read.csv(
+                    df = spark.read.option("header", "true").csv(
                         os.path.join(
                             self.csv_directory, f"summary_df_{year}_{quarter}.csv"
                         )
                     )
                 else:
-                    tmp_df = spark.read.csv(
+                    tmp_df = spark.read.option("header", "true").csv(
                         os.path.join(
                             self.csv_directory, f"summary_df_{year}_{quarter}.csv"
                         )
@@ -100,5 +100,7 @@ class FolderReader:
 
     def read_summary(self):
         spark = ini_spark()
-        df = spark.read.csv(os.path.join(self.csv_directory, "summary.csv")).option("header", "true")
+        df = spark.read.option("header", "true").csv(
+            os.path.join(self.csv_directory, "summary.csv")
+        )
         return df
