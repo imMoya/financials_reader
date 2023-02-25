@@ -63,7 +63,7 @@ class FolderReader:
                 )
             df = spark.createDataFrame(collect_df)
             print(df.show())
-            df.write.option("header", "true").csv(
+            df.coalesce(1).write.option("header", "true").csv(
                 os.path.join(self.csv_directory, f"summary_df_{year}_{quarter}.csv")
             )
         if unique_df == True:
@@ -86,7 +86,7 @@ class FolderReader:
             destiny_file = os.path.join(self.csv_directory, "summary.csv")
             if os.path.exists(destiny_file):
                 shutil.rmtree(destiny_file)
-            df.write.option("header", "true").csv(destiny_file)
+            df.coalesce(1).write.option("header", "true").csv(destiny_file)
         if remove_aux_dirs == True:
             try:
                 [
