@@ -1,7 +1,7 @@
-# pyspark_financials
+# financials_reader
 
 ### Introduction
-This repository is developed with the purpose of learning pyspark while performing data engineering on financial related problems
+This repository is developed with the purpose of learning pyspark and polars while performing data engineering on financial related problems
 
 ### Inputs
 Input data has been extracted from an available dataset from finnhub available at: 
